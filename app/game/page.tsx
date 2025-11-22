@@ -29,7 +29,7 @@ export default function GamePage() {
         <Link href="/">
           <Button variant="outline" size="sm" className="gap-2 flex items-center bg-white/80 backdrop-blur-sm border-white/50">
             <ArrowLeft size={16} />
-            Exit
+            もどる
           </Button>
         </Link>
       </div>
