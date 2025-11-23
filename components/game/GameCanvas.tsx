@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { useGameStore } from '@/store/useGameStore';
 import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { Feedback } from './Feedback';
+import { DifficultySelector } from './DifficultySelector';
+import { Operation } from '@/lib/math-engine';
 
 export const GameCanvas = () => {
   const { 
@@ -18,7 +20,9 @@ export const GameCanvas = () => {
     maxCombo,
     timeLeft,
     startGame,
-    tick
+    tick,
+    difficultyLevel,
+    setDifficulty
   } = useGameStore();
   
   const controls = useAnimation();
@@ -48,6 +52,17 @@ export const GameCanvas = () => {
       return () => clearTimeout(timer);
     }
   }, [feedback, clearFeedback, controls]);
+
+  // Get operation symbol color
+  const getOperationColor = (operation: Operation) => {
+    switch (operation) {
+      case 'add': return 'text-orange-400';
+      case 'subtract': return 'text-blue-400';
+      case 'multiply': return 'text-green-400';
+      case 'divide': return 'text-purple-400';
+      default: return 'text-orange-400';
+    }
+  };
 
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
@@ -81,11 +96,17 @@ export const GameCanvas = () => {
               クエスト
             </h1>
             <p className="text-gray-500 mb-8 font-bold">めざせ！けいさんマスター</p>
+            
+            <DifficultySelector 
+              selectedLevel={difficultyLevel}
+              onSelectLevel={setDifficulty}
+            />
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => startGame(30)}
-              className="bg-gradient-to-b from-sky-400 to-sky-500 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg border-b-4 border-sky-600 active:border-b-0 active:translate-y-1"
+              className="mt-6 bg-gradient-to-b from-sky-400 to-sky-500 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg border-b-4 border-sky-600 active:border-b-0 active:translate-y-1"
             >
               スタート！
             </motion.button>
@@ -127,9 +148,14 @@ export const GameCanvas = () => {
                 className="bg-slate-100 rounded-3xl py-10 px-4 shadow-inner border-2 border-slate-200"
               >
                 <div className="flex justify-center items-center gap-2 md:gap-4 text-5xl md:text-6xl font-black text-slate-700">
-                  <span>{currentProblem.expression.split(' + ')[0]}</span>
-                  <span className="text-orange-400">+</span>
-                  <span>{currentProblem.expression.split(' + ')[1].split(' =')[0]}</span>
+                  <span>{currentProblem.operands.a}</span>
+                  <span className={getOperationColor(currentProblem.operation)}>
+                    {currentProblem.operation === 'add' && '+'}
+                    {currentProblem.operation === 'subtract' && '-'}
+                    {currentProblem.operation === 'multiply' && '×'}
+                    {currentProblem.operation === 'divide' && '÷'}
+                  </span>
+                  <span>{currentProblem.operands.b}</span>
                   <span className="text-gray-400">=</span>
                   <span className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-blue-500">
                     ?

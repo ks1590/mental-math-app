@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { generateProblem, Problem } from '@/lib/math-engine';
+import { generateProblem, Problem, DifficultyLevel } from '@/lib/math-engine';
 
 type GameStatus = 'idle' | 'playing' | 'finished';
 type FeedbackType = 'correct' | 'incorrect' | null;
@@ -12,7 +12,9 @@ interface GameState {
   maxCombo: number;
   timeLeft: number;
   feedback: FeedbackType;
+  difficultyLevel: DifficultyLevel;
   
+  setDifficulty: (level: DifficultyLevel) => void;
   startGame: (duration?: number) => void;
   submitAnswer: (answer: number) => void;
   tick: () => void;
@@ -28,15 +30,21 @@ export const useGameStore = create<GameState>((set, get) => ({
   maxCombo: 0,
   timeLeft: 30,
   feedback: null,
+  difficultyLevel: 1,
+
+  setDifficulty: (level: DifficultyLevel) => {
+    set({ difficultyLevel: level });
+  },
 
   startGame: (duration = 30) => {
+    const { difficultyLevel } = get();
     set({
       status: 'playing',
       score: 0,
       combo: 0,
       maxCombo: 0,
       timeLeft: duration,
-      currentProblem: generateProblem(1),
+      currentProblem: generateProblem(difficultyLevel),
       feedback: null,
     });
   },
@@ -53,7 +61,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   submitAnswer: (answer: number) => {
-    const { currentProblem, combo, score, maxCombo, status } = get();
+    const { currentProblem, combo, score, maxCombo, status, difficultyLevel } = get();
     if (status !== 'playing' || !currentProblem) return;
 
     const isCorrect = answer === currentProblem.answer;
@@ -65,7 +73,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         combo: newCombo,
         maxCombo: Math.max(maxCombo, newCombo),
         feedback: 'correct',
-        currentProblem: generateProblem(1),
+        currentProblem: generateProblem(difficultyLevel),
       });
     } else {
       set({
