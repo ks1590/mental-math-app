@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { useGameStore } from '@/store/useGameStore';
 import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
@@ -52,6 +52,29 @@ export const GameCanvas = () => {
       return () => clearTimeout(timer);
     }
   }, [feedback, clearFeedback, controls]);
+
+  // Countdown effect
+  const [countdown, setCountdown] = useState(3);
+  
+  useEffect(() => {
+    if (status === 'countdown') {
+      setCountdown(3);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            // Transition to playing after countdown
+            setTimeout(() => {
+              useGameStore.setState({ status: 'playing' });
+            }, 500);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [status]);
 
   // Get operation symbol color
   const getOperationColor = (operation: Operation) => {
@@ -108,6 +131,36 @@ export const GameCanvas = () => {
             >
               スタート！
             </motion.button>
+          </motion.div>
+        )}
+
+        {status === 'countdown' && (
+          <motion.div
+            key="countdown"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.5 }}
+            className="text-center py-20"
+          >
+            <motion.div
+              key={countdown}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0, rotate: 180 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              className="mb-4"
+            >
+              {countdown > 0 ? (
+                <span className="text-9xl font-black text-sky-500 drop-shadow-lg">
+                  {countdown}
+                </span>
+              ) : (
+                <span className="text-7xl font-black text-yellow-400 drop-shadow-lg">
+                  GO!
+                </span>
+              )}
+            </motion.div>
+            <p className="text-gray-500 font-bold text-lg">準備はいいかな？</p>
           </motion.div>
         )}
 

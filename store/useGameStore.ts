@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { generateProblem, Problem, DifficultyLevel } from '@/lib/math-engine';
 
-type GameStatus = 'idle' | 'playing' | 'finished';
+type GameStatus = 'idle' | 'countdown' | 'playing' | 'finished';
 type FeedbackType = 'correct' | 'incorrect' | null;
 
 interface GameState {
@@ -39,7 +39,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   startGame: (duration = 30) => {
     const { difficultyLevel } = get();
     set({
-      status: 'playing',
+      status: 'countdown',
       score: 0,
       combo: 0,
       maxCombo: 0,
