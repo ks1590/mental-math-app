@@ -91,11 +91,9 @@ export const GameCanvas = () => {
             className="text-center py-10"
           >
             <h1 className="text-4xl font-black text-orange-500 mb-2 tracking-tighter">
-              あんざん
-              <br />
-              クエスト
+              暗算クエスト
             </h1>
-            <p className="text-gray-500 mb-8 font-bold">めざせ！けいさんマスター</p>
+            <p className="text-gray-500 mb-8 font-bold">めざせ！計算マスター</p>
             
             <DifficultySelector 
               selectedLevel={difficultyLevel}
@@ -106,7 +104,7 @@ export const GameCanvas = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => startGame(30)}
-              className="mt-6 bg-gradient-to-b from-sky-400 to-sky-500 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg border-b-4 border-sky-600 active:border-b-0 active:translate-y-1"
+              className="mt-10 bg-gradient-to-b from-sky-400 to-sky-500 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg border-b-4 border-sky-600 active:border-b-0 active:translate-y-1"
             >
               スタート！
             </motion.button>
