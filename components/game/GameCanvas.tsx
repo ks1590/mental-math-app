@@ -96,7 +96,7 @@ export const GameCanvas = () => {
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
       
       {/* Header Info */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
           <Timer className="text-blue-500" />
           <span className={`text-xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>

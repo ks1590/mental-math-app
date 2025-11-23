@@ -54,7 +54,7 @@ const levelConfig = [
 export const DifficultySelector = ({ selectedLevel, onSelectLevel }: DifficultySelectorProps) => {
   return (
     <div className="space-y-3 w-full max-w-sm">
-      <p className="text-sm font-bold text-gray-600 text-center mb-4">レベルをを選んでね！</p>
+      <p className="text-lg font-bold text-gray-600 text-center mb-4">レベルをを選んでね！</p>
       {levelConfig.map((config) => {
         const isSelected = selectedLevel === config.level;
         return (

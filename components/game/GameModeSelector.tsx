@@ -24,7 +24,7 @@ const modeConfig = [
   {
     mode: 'survival' as GameMode,
     title: 'サバイバル',
-    description: '時間切れまで挑戦！',
+    description: '時間切れまでチャレンジ！',
     icon: Zap,
     color: 'bg-orange-400',
     hoverColor: 'hover:bg-orange-300',
@@ -35,8 +35,8 @@ const modeConfig = [
 
 export const GameModeSelector = ({ selectedMode, onSelectMode }: GameModeSelectorProps) => {
   return (
-    <div className="space-y-3 w-full max-w-sm mb-6">
-      <p className="text-sm font-bold text-gray-600 text-center mb-4">モードを選んでね！</p>
+    <div className="space-y-3 w-full max-w-sm mb-14">
+      <p className="text-lg font-bold text-gray-600 text-center mb-4">モードを選んでね！</p>
       <div className="grid grid-cols-2 gap-3">
         {modeConfig.map((config) => {
           const isSelected = selectedMode === config.mode;
