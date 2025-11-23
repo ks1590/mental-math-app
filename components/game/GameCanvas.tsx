@@ -6,6 +6,7 @@ import { useGameStore } from '@/store/useGameStore';
 import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { Feedback } from './Feedback';
 import { DifficultySelector } from './DifficultySelector';
+import { GameModeSelector } from './GameModeSelector';
 import { Operation } from '@/lib/math-engine';
 
 export const GameCanvas = () => {
@@ -22,21 +23,25 @@ export const GameCanvas = () => {
     startGame,
     tick,
     difficultyLevel,
-    setDifficulty
+    setDifficulty,
+    gameMode,
+    setGameMode,
+    questionsAnswered,
+    tickSpeed
   } = useGameStore();
   
   const controls = useAnimation();
 
-  // Timer effect
+  // Timer effect with dynamic speed
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (status === 'playing' && timeLeft > 0) {
       timer = setInterval(() => {
         tick();
-      }, 1000);
+      }, tickSpeed);
     }
     return () => clearInterval(timer);
-  }, [status, timeLeft, tick]);
+  }, [status, timeLeft, tick, tickSpeed]);
 
   // Feedback effect
   useEffect(() => {
@@ -104,6 +109,24 @@ export const GameCanvas = () => {
         </div>
       </div>
 
+      {/* Survival Mode Stats */}
+      {status === 'playing' && gameMode === 'survival' && (
+        <div className="flex justify-center gap-3 mb-4">
+          <div className="bg-white/80 px-3 py-1 rounded-full shadow-sm">
+            <span className="text-sm font-bold text-gray-600">
+              {questionsAnswered}問クリア
+            </span>
+          </div>
+          {tickSpeed < 1000 && (
+            <div className="bg-orange-100 px-3 py-1 rounded-full shadow-sm">
+              <span className="text-sm font-bold text-orange-600">
+                ×{(1000 / tickSpeed).toFixed(1)}倍速
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       <AnimatePresence mode='wait'>
         {status === 'idle' && (
           <motion.div
@@ -118,6 +141,11 @@ export const GameCanvas = () => {
             </h1>
             <p className="text-gray-500 mb-8 font-bold">めざせ！計算マスター</p>
             
+            <GameModeSelector 
+              selectedMode={gameMode}
+              onSelectMode={setGameMode}
+            />
+            
             <DifficultySelector 
               selectedLevel={difficultyLevel}
               onSelectLevel={setDifficulty}
@@ -126,7 +154,7 @@ export const GameCanvas = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => startGame(30)}
+              onClick={() => startGame()}
               className="mt-10 bg-gradient-to-b from-sky-400 to-sky-500 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg border-b-4 border-sky-600 active:border-b-0 active:translate-y-1"
             >
               スタート！
@@ -252,10 +280,19 @@ export const GameCanvas = () => {
                 <p className="text-xl font-bold text-gray-700">{maxCombo}かい</p>
               </div>
               <div>
-                <p className="text-xs text-gray-400 font-bold">ランク</p>
-                <p className="text-xl font-bold text-orange-500">
-                  {score > 300 ? 'SS' : score > 200 ? 'S' : score > 100 ? 'A' : 'B'}
-                </p>
+                {gameMode === 'survival' ? (
+                  <>
+                    <p className="text-xs text-gray-400 font-bold">クリア数</p>
+                    <p className="text-xl font-bold text-orange-500">{questionsAnswered}問</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-400 font-bold">ランク</p>
+                    <p className="text-xl font-bold text-orange-500">
+                      {score > 300 ? 'SS' : score > 200 ? 'S' : score > 100 ? 'A' : 'B'}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
