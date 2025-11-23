@@ -10,6 +10,16 @@ interface DifficultySelectorProps {
 
 const levelConfig = [
   {
+    level: 0 as DifficultyLevel,
+    title: 'レベル0',
+    description: '足し算のみ',
+    symbols: ['+'],
+    color: 'bg-yellow-400',
+    hoverColor: 'hover:bg-yellow-300',
+    borderColor: 'border-yellow-600',
+    textColor: 'text-yellow-900',
+  },
+  {
     level: 1 as DifficultyLevel,
     title: 'レベル1',
     description: '足し算・引き算',

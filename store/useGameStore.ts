@@ -30,7 +30,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   maxCombo: 0,
   timeLeft: 30,
   feedback: null,
-  difficultyLevel: 1,
+  difficultyLevel: 0,
 
   setDifficulty: (level: DifficultyLevel) => {
     set({ difficultyLevel: level });

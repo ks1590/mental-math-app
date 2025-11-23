@@ -1,5 +1,5 @@
 export type Operation = 'add' | 'subtract' | 'multiply' | 'divide';
-export type DifficultyLevel = 1 | 2 | 3;
+export type DifficultyLevel = 0 | 1 | 2 | 3;
 
 export type Problem = {
   id: string;
@@ -13,6 +13,8 @@ export type Problem = {
 // Get operations allowed for each difficulty level
 const getOperationsForLevel = (level: DifficultyLevel): Operation[] => {
   switch (level) {
+    case 0:
+      return ['add'];
     case 1:
       return ['add', 'subtract'];
     case 2:
