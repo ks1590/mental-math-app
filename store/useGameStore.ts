@@ -84,7 +84,15 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   resetGame: () => {
-    set({ status: 'idle', currentProblem: null, score: 0, combo: 0, feedback: null });
+    set({ 
+      status: 'idle', 
+      currentProblem: null, 
+      score: 0, 
+      combo: 0, 
+      maxCombo: 0,
+      timeLeft: 30,
+      feedback: null 
+    });
   },
 
   clearFeedback: () => {
