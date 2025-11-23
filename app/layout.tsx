@@ -13,8 +13,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MathPop! - Fun Mental Math",
-  description: "A gamified mental arithmetic app for kids",
+  title: "MathPop! - 楽しく学べる暗算アプリ",
+  description: "小学生向けの楽しい暗算学習アプリ",
+  manifest: "/manifest.json",
+  themeColor: "#fb923c",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "MathPop!",
+  },
+  icons: [
+    { rel: "icon", url: "/icon.svg" },
+    { rel: "apple-touch-icon", url: "/apple-touch-icon.png" },
+  ],
 };
 
 export default function RootLayout({
@@ -23,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
