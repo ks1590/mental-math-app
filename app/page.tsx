@@ -25,7 +25,7 @@ export default function Home() {
           </Button>
         </Link>
         
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4">
           <div className="bg-white/60 p-4 rounded-2xl backdrop-blur-sm">
             <Trophy className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
             <div className="font-bold text-indigo-900">ランキング</div>
@@ -34,7 +34,7 @@ export default function Home() {
             <Zap className="w-8 h-8 text-orange-500 mx-auto mb-2" />
             <div className="font-bold text-indigo-900">スピード</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );
