@@ -6,8 +6,11 @@ import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { Feedback } from './Feedback';
 import { DifficultySelector } from './DifficultySelector';
 import { GameModeSelector } from './GameModeSelector';
+import { ScorePopup } from './ScorePopup';
+import { ScoreDisplay } from './ScoreDisplay';
 import { useGameTimer, useGameFeedback, useCountdown, useOperationColor } from '@/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 export const GameCanvas = () => {
   const { 
@@ -31,6 +34,9 @@ export const GameCanvas = () => {
   } = useGameStore();
   
   const controls = useAnimation();
+  const [prevScore, setPrevScore] = useState(0);
+  const [showScorePopup, setShowScorePopup] = useState(false);
+  const [scoreGain, setScoreGain] = useState(0);
 
   // Custom hooks for logic separation
   useGameTimer({ status, timeLeft, tick, tickSpeed });
@@ -43,11 +49,30 @@ export const GameCanvas = () => {
   
   const { getOperationColor } = useOperationColor();
 
+  // Track score changes for popup animation
+  useEffect(() => {
+    if (score > prevScore && status === 'playing') {
+      const gain = score - prevScore;
+      setScoreGain(gain);
+      setShowScorePopup(true);
+      setPrevScore(score);
+      
+      // Hide popup after animation
+      const timer = setTimeout(() => {
+        setShowScorePopup(false);
+      }, 1200);
+      
+      return () => clearTimeout(timer);
+    } else if (status === 'idle') {
+      setPrevScore(0);
+    }
+  }, [score, prevScore, status]);
+
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
       
       {/* Header Info - Only show during gameplay */}
-      {(status === 'playing' || status === 'finished') && (
+      {(status === 'playing') && (
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
             <Timer className="text-blue-500" />
@@ -55,10 +80,7 @@ export const GameCanvas = () => {
               {timeLeft}秒
             </span>
           </div>
-          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-            <Trophy className="text-yellow-500" />
-            <span className="text-xl font-bold text-gray-700">{score}</span>
-          </div>
+          <ScoreDisplay score={score} combo={combo} />
         </div>
       )}
 
@@ -171,6 +193,7 @@ export const GameCanvas = () => {
             {/* Problem Area */}
             <div className="relative mb-8">
                <Feedback type={feedback} />
+               <ScorePopup score={scoreGain} isVisible={showScorePopup} />
 
               <motion.div
                 animate={
