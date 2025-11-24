@@ -46,19 +46,21 @@ export const GameCanvas = () => {
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
       
-      {/* Header Info */}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-          <Timer className="text-blue-500" />
-          <span className={`text-xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
-            {timeLeft}秒
-          </span>
+      {/* Header Info - Only show during gameplay */}
+      {(status === 'playing' || status === 'finished') && (
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+            <Timer className="text-blue-500" />
+            <span className={`text-xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
+              {timeLeft}秒
+            </span>
+          </div>
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+            <Trophy className="text-yellow-500" />
+            <span className="text-xl font-bold text-gray-700">{score}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-          <Trophy className="text-yellow-500" />
-          <span className="text-xl font-bold text-gray-700">{score}</span>
-        </div>
-      </div>
+      )}
 
       {/* Survival Mode Stats */}
       {status === 'playing' && gameMode === 'survival' && (
