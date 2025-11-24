@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { useAnimation } from 'framer-motion';
 import { useGameStore } from '@/store/useGameStore';
 import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { Feedback } from './Feedback';
 import { DifficultySelector } from './DifficultySelector';
 import { GameModeSelector } from './GameModeSelector';
-import { Operation } from '@/lib/math-engine';
+import { useGameTimer, useGameFeedback, useCountdown, useOperationColor } from '@/hooks';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const GameCanvas = () => {
   const { 
@@ -32,65 +32,16 @@ export const GameCanvas = () => {
   
   const controls = useAnimation();
 
-  // Timer effect with dynamic speed
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (status === 'playing' && timeLeft > 0) {
-      timer = setInterval(() => {
-        tick();
-      }, tickSpeed);
-    }
-    return () => clearInterval(timer);
-  }, [status, timeLeft, tick, tickSpeed]);
-
-  // Feedback effect
-  useEffect(() => {
-    if (feedback === 'correct') {
-      const timer = setTimeout(clearFeedback, 400);
-      return () => clearTimeout(timer);
-    } else if (feedback === 'incorrect') {
-      controls.start({
-        x: [0, -10, 10, -10, 10, 0],
-        transition: { duration: 0.4 }
-      });
-      const timer = setTimeout(clearFeedback, 400);
-      return () => clearTimeout(timer);
-    }
-  }, [feedback, clearFeedback, controls]);
-
-  // Countdown effect
-  const [countdown, setCountdown] = useState(3);
+  // Custom hooks for logic separation
+  useGameTimer({ status, timeLeft, tick, tickSpeed });
+  useGameFeedback({ feedback, clearFeedback, controls });
   
-  useEffect(() => {
-    if (status === 'countdown') {
-      setCountdown(3);
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            // Transition to playing after countdown
-            setTimeout(() => {
-              useGameStore.setState({ status: 'playing' });
-            }, 500);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [status]);
-
-  // Get operation symbol color
-  const getOperationColor = (operation: Operation) => {
-    switch (operation) {
-      case 'add': return 'text-orange-400';
-      case 'subtract': return 'text-blue-400';
-      case 'multiply': return 'text-green-400';
-      case 'divide': return 'text-purple-400';
-      default: return 'text-orange-400';
-    }
-  };
+  const { countdown } = useCountdown({ 
+    status, 
+    onComplete: () => useGameStore.setState({ status: 'playing' })
+  });
+  
+  const { getOperationColor } = useOperationColor();
 
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
