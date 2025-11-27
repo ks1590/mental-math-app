@@ -162,12 +162,12 @@ export const GameCanvas = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="text-center py-10"
+            className="text-center pt-4"
           >
-            <h1 className="text-4xl font-black text-orange-500 mb-2 tracking-tighter">
+            {/* <h1 className="text-4xl font-black text-orange-500 mb-2 tracking-tighter">
               暗算クエスト
             </h1>
-            <p className="text-gray-500 mb-8 font-bold">めざせ！計算マスター</p>
+            <p className="text-gray-500 mb-8 font-bold">めざせ！計算マスター</p> */}
             
             <GameModeSelector 
               selectedMode={gameMode}
