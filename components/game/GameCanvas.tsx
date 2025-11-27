@@ -244,8 +244,8 @@ export const GameCanvas = () => {
             className="text-center py-6"
           >
             <div className="mb-6">
-              <Trophy size={80} className="mx-auto text-yellow-400 mb-4 drop-shadow-md" />
-              <h2 className="text-3xl font-black text-gray-700 mb-2">おつかれさま！</h2>
+              <Trophy size={80} className="mx-auto text-yellow-400 mb-8 drop-shadow-md" />
+              <h2 className="text-3xl font-black text-gray-700 mb-4">よくできました！</h2>
               <p className="text-gray-500 font-bold">今回のスコア</p>
               <p className="text-6xl font-black text-sky-500 my-4">{score}</p>
             </div>
@@ -253,7 +253,7 @@ export const GameCanvas = () => {
             <div className="grid grid-cols-2 gap-4 mb-8 text-left bg-white p-4 rounded-xl shadow-sm">
               <div>
                 <p className="text-xs text-gray-400 font-bold">さいだいコンボ</p>
-                <p className="text-xl font-bold text-gray-700">{maxCombo}かい</p>
+                <p className="text-xl font-bold text-gray-700">{maxCombo} 回</p>
               </div>
               <div>
                 {gameMode === 'survival' ? (
