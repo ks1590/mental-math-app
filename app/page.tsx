@@ -10,10 +10,10 @@ export default function Home() {
         <div className="inline-block p-2 rounded-3xl shadow-xl rotate-7 mb-6">
           <Image src="/icon.svg" alt="MathPop Logo" width={120} height={120} priority />
         </div>
-        <h1 className="text-5xl md:text-7xl font-black text-indigo-900 tracking-tight">
+        <h1 className="text-5xl md:text-7xl font-black text-indigo-900 tracking-tight font-mochiy-pop-one">
           Math<span className="text-orange-500">Pop!</span>
         </h1>
-        <p className="text-xl text-indigo-600 font-medium">
+        <p className="text-xl text-indigo-600 font-medium font-mochiy-pop-one">
           楽しく学べる暗算アプリ
         </p>
       </div>
