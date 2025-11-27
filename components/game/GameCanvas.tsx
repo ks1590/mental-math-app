@@ -49,7 +49,6 @@ export const GameCanvas = () => {
   
   const { getOperationColor } = useOperationColor();
 
-  // Track score changes for popup animation
   useEffect(() => {
     if (score > prevScore && status === 'playing') {
       const gain = score - prevScore;
@@ -63,8 +62,10 @@ export const GameCanvas = () => {
       }, 1200);
       
       return () => clearTimeout(timer);
-    } else if (status === 'idle') {
+    } else if (status === 'idle' || status === 'countdown') {
       setPrevScore(0);
+      setShowScorePopup(false);
+      setScoreGain(0);
     }
   }, [score, prevScore, status]);
 
