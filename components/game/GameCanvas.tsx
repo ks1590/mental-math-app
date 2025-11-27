@@ -1,13 +1,17 @@
 'use client';
 
+import confetti from 'canvas-confetti';
 import { useAnimation } from 'framer-motion';
 import { useGameStore } from '@/store/useGameStore';
 import { Star, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { Feedback } from './Feedback';
 import { DifficultySelector } from './DifficultySelector';
 import { GameModeSelector } from './GameModeSelector';
+import { ScorePopup } from './ScorePopup';
+import { ScoreDisplay } from './ScoreDisplay';
 import { useGameTimer, useGameFeedback, useCountdown, useOperationColor } from '@/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 export const GameCanvas = () => {
   const { 
@@ -31,6 +35,9 @@ export const GameCanvas = () => {
   } = useGameStore();
   
   const controls = useAnimation();
+  const [prevScore, setPrevScore] = useState(0);
+  const [showScorePopup, setShowScorePopup] = useState(false);
+  const [scoreGain, setScoreGain] = useState(0);
 
   // Custom hooks for logic separation
   useGameTimer({ status, timeLeft, tick, tickSpeed });
@@ -43,22 +50,92 @@ export const GameCanvas = () => {
   
   const { getOperationColor } = useOperationColor();
 
+  // Confetti effect on game finish
+  useEffect(() => {
+    if (status === 'finished') {
+      const duration = 3500;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      const randomInRange = (min: number, max: number) => {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval: any = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        
+        // Standard confetti
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        });
+        
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        });
+
+        // Emoji confetti
+        const scalar = 4;
+        const emojis = ['🎉', '🎊', '⭐'];
+        const shapes = emojis.map(emoji => confetti.shapeFromText({ text: emoji, scalar }));
+
+        confetti({
+          ...defaults,
+          particleCount: particleCount * 0.4,
+          scalar,
+          shapes: shapes,
+          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+        });
+      }, 250);
+
+      return () => clearInterval(interval);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (score > prevScore && status === 'playing') {
+      const gain = score - prevScore;
+      setScoreGain(gain);
+      setShowScorePopup(true);
+      setPrevScore(score);
+      
+      // Hide popup after animation
+      const timer = setTimeout(() => {
+        setShowScorePopup(false);
+      }, 1200);
+      
+      return () => clearTimeout(timer);
+    } else if (status === 'idle' || status === 'countdown') {
+      setPrevScore(0);
+      setShowScorePopup(false);
+      setScoreGain(0);
+    }
+  }, [score, prevScore, status]);
+
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
       
-      {/* Header Info */}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-          <Timer className="text-blue-500" />
-          <span className={`text-xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
-            {timeLeft}秒
-          </span>
+      {/* Header Info - Only show during gameplay */}
+      {(status === 'playing') && (
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+            <Timer className="text-blue-500" />
+            <span className={`text-xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
+              {timeLeft}秒
+            </span>
+          </div>
+          <ScoreDisplay score={score} combo={combo} />
         </div>
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-          <Trophy className="text-yellow-500" />
-          <span className="text-xl font-bold text-gray-700">{score}</span>
-        </div>
-      </div>
+      )}
 
       {/* Survival Mode Stats */}
       {status === 'playing' && gameMode === 'survival' && (
@@ -157,7 +234,7 @@ export const GameCanvas = () => {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1.2 }}
-                  className="text-orange-500 font-black text-lg flex justify-center items-center gap-1"
+                  className="text-orange-500 font-black text-lg flex justify-center items-center gap-1 mt-8"
                 >
                   <Star size={20} fill="currentColor" />
                   {combo} コンボ！
@@ -169,6 +246,7 @@ export const GameCanvas = () => {
             {/* Problem Area */}
             <div className="relative mb-8">
                <Feedback type={feedback} />
+               <ScorePopup score={scoreGain} isVisible={showScorePopup} />
 
               <motion.div
                 animate={
@@ -219,8 +297,8 @@ export const GameCanvas = () => {
             className="text-center py-6"
           >
             <div className="mb-6">
-              <Trophy size={80} className="mx-auto text-yellow-400 mb-4 drop-shadow-md" />
-              <h2 className="text-3xl font-black text-gray-700 mb-2">おつかれさま！</h2>
+              <Trophy size={80} className="mx-auto text-yellow-400 mb-8 drop-shadow-md" />
+              <h2 className="text-3xl font-black text-gray-700 mb-4">よくできました！</h2>
               <p className="text-gray-500 font-bold">今回のスコア</p>
               <p className="text-6xl font-black text-sky-500 my-4">{score}</p>
             </div>
@@ -228,7 +306,7 @@ export const GameCanvas = () => {
             <div className="grid grid-cols-2 gap-4 mb-8 text-left bg-white p-4 rounded-xl shadow-sm">
               <div>
                 <p className="text-xs text-gray-400 font-bold">さいだいコンボ</p>
-                <p className="text-xl font-bold text-gray-700">{maxCombo}かい</p>
+                <p className="text-xl font-bold text-gray-700">{maxCombo} 回</p>
               </div>
               <div>
                 {gameMode === 'survival' ? (
