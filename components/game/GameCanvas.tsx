@@ -181,7 +181,7 @@ export const GameCanvas = () => {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1.2 }}
-                  className="text-orange-500 font-black text-lg flex justify-center items-center gap-1"
+                  className="text-orange-500 font-black text-lg flex justify-center items-center gap-1 mt-8"
                 >
                   <Star size={20} fill="currentColor" />
                   {combo} コンボ！
