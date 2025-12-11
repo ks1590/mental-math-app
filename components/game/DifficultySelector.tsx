@@ -65,25 +65,24 @@ export const DifficultySelector = ({ selectedLevel, onSelectLevel }: DifficultyS
             onClick={() => onSelectLevel(config.level)}
             className={`
               w-full p-4 rounded-2xl border-b-4 transition-all
-              ${isSelected 
-                ? `${config.color} ${config.borderColor} ring-4 ring-offset-2 ring-yellow-300` 
-                : `bg-white ${config.borderColor} opacity-70 ${config.hoverColor}`
+              ${
+                isSelected
+                  ? `${config.color} ${config.borderColor} ring-4 ring-offset-2 ring-yellow-300`
+                  : `bg-white ${config.borderColor} opacity-70 ${config.hoverColor}`
               }
               active:border-b-0 active:translate-y-1
             `}
           >
             <div className="flex items-center justify-between">
               <div className="text-left">
-                <h3 className={`font-black text-lg ${isSelected ? 'text-white' : config.textColor}`}>
-                  {config.title}
-                </h3>
+                <h3 className={`font-black text-lg ${isSelected ? 'text-white' : config.textColor}`}>{config.title}</h3>
                 <p className={`text-xs font-medium ${isSelected ? 'text-white/90' : 'text-gray-500'}`}>
                   {config.description}
                 </p>
               </div>
               <div className="flex gap-1">
                 {config.symbols.map((symbol, idx) => (
-                  <span 
+                  <span
                     key={idx}
                     className={`
                       w-8 h-8 rounded-lg flex items-center justify-center text-lg font-black

@@ -49,18 +49,16 @@ export const GameModeSelector = ({ selectedMode, onSelectMode }: GameModeSelecto
               onClick={() => onSelectMode(config.mode)}
               className={`
                 p-4 rounded-2xl border-b-4 transition-all
-                ${isSelected 
-                  ? `${config.color} ${config.borderColor} ring-4 ring-offset-2 ring-yellow-300` 
-                  : `bg-white ${config.borderColor} opacity-70 ${config.hoverColor}`
+                ${
+                  isSelected
+                    ? `${config.color} ${config.borderColor} ring-4 ring-offset-2 ring-yellow-300`
+                    : `bg-white ${config.borderColor} opacity-70 ${config.hoverColor}`
                 }
                 active:border-b-0 active:translate-y-1
               `}
             >
               <div className="flex flex-col items-center gap-2">
-                <Icon 
-                  size={32} 
-                  className={isSelected ? 'text-white' : config.textColor}
-                />
+                <Icon size={32} className={isSelected ? 'text-white' : config.textColor} />
                 <div className="text-center">
                   <h3 className={`font-black text-base ${isSelected ? 'text-white' : config.textColor}`}>
                     {config.title}

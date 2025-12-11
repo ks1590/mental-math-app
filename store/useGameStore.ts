@@ -17,7 +17,7 @@ interface GameState {
   gameMode: GameMode;
   questionsAnswered: number;
   tickSpeed: number;
-  
+
   setDifficulty: (level: DifficultyLevel) => void;
   setGameMode: (mode: GameMode) => void;
   startGame: (duration?: number) => void;
@@ -76,7 +76,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   submitAnswer: (answer: number) => {
-    const { currentProblem, combo, score, maxCombo, status, difficultyLevel, gameMode, questionsAnswered, timeLeft } = get();
+    const { currentProblem, combo, score, maxCombo, status, difficultyLevel, gameMode, questionsAnswered, timeLeft } =
+      get();
     if (status !== 'playing' || !currentProblem) return;
 
     const isCorrect = answer === currentProblem.answer;
@@ -84,13 +85,13 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (isCorrect) {
       const newCombo = combo + 1;
       const newQuestionsAnswered = questionsAnswered + 1;
-      
+
       // Survival mode: add time on correct answer
       let newTimeLeft = timeLeft;
       if (gameMode === 'survival') {
         newTimeLeft = Math.min(timeLeft + 3, 30); // Cap at 30 seconds
       }
-      
+
       // Calculate new tick speed based on questions answered
       let newTickSpeed = 1000;
       if (gameMode === 'survival') {
@@ -102,9 +103,9 @@ export const useGameStore = create<GameState>((set, get) => ({
           newTickSpeed = 833; // 1.2x speed
         }
       }
-      
+
       set({
-        score: score + 10 + (combo * 2),
+        score: score + 10 + combo * 2,
         combo: newCombo,
         maxCombo: Math.max(maxCombo, newCombo),
         feedback: 'correct',
@@ -122,11 +123,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   resetGame: () => {
-    set({ 
-      status: 'idle', 
-      currentProblem: null, 
-      score: 0, 
-      combo: 0, 
+    set({
+      status: 'idle',
+      currentProblem: null,
+      score: 0,
+      combo: 0,
       maxCombo: 0,
       timeLeft: 30,
       feedback: null,
@@ -137,5 +138,5 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   clearFeedback: () => {
     set({ feedback: null });
-  }
+  },
 }));

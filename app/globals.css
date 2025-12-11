@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -13,15 +13,13 @@
 }
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom right,
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
-    );
+  background: linear-gradient(to bottom right, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
   min-height: 100vh;
   /* Dot pattern overlay */
   background-image: radial-gradient(#fb923c 1px, transparent 1px), radial-gradient(#fb923c 1px, transparent 1px);
-  background-position: 0 0, 25px 25px;
+  background-position:
+    0 0,
+    25px 25px;
   background-size: 50px 50px;
   background-color: #fff7ed; /* orange-50 */
 }

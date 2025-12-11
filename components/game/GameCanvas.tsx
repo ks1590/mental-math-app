@@ -11,14 +11,14 @@ import { ScorePopup } from './ScorePopup';
 import { ScoreDisplay } from './ScoreDisplay';
 import { useGameTimer, useGameFeedback, useCountdown, useOperationColor } from '@/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const GameCanvas = () => {
-  const { 
+  const {
     status,
-    currentProblem, 
-    submitAnswer, 
-    feedback, 
+    currentProblem,
+    submitAnswer,
+    feedback,
     clearFeedback,
     score,
     combo,
@@ -31,9 +31,9 @@ export const GameCanvas = () => {
     gameMode,
     setGameMode,
     questionsAnswered,
-    tickSpeed
+    tickSpeed,
   } = useGameStore();
-  
+
   const controls = useAnimation();
   const [prevScore, setPrevScore] = useState(0);
   const [showScorePopup, setShowScorePopup] = useState(false);
@@ -42,12 +42,12 @@ export const GameCanvas = () => {
   // Custom hooks for logic separation
   useGameTimer({ status, timeLeft, tick, tickSpeed });
   useGameFeedback({ feedback, clearFeedback, controls });
-  
-  const { countdown } = useCountdown({ 
-    status, 
-    onComplete: () => useGameStore.setState({ status: 'playing' })
+
+  const { countdown } = useCountdown({
+    status,
+    onComplete: () => useGameStore.setState({ status: 'playing' }),
   });
-  
+
   const { getOperationColor } = useOperationColor();
 
   // Confetti effect on game finish
@@ -59,9 +59,9 @@ export const GameCanvas = () => {
 
       const randomInRange = (min: number, max: number) => {
         return Math.random() * (max - min) + min;
-      }
+      };
 
-      const interval: any = setInterval(function() {
+      const interval: any = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
 
         if (timeLeft <= 0) {
@@ -69,31 +69,31 @@ export const GameCanvas = () => {
         }
 
         const particleCount = 50 * (timeLeft / duration);
-        
+
         // Standard confetti
         confetti({
           ...defaults,
           particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
         });
-        
+
         confetti({
           ...defaults,
           particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
         });
 
         // Emoji confetti
         const scalar = 4;
         const emojis = ['🎉', '🎊', '⭐'];
-        const shapes = emojis.map(emoji => confetti.shapeFromText({ text: emoji, scalar }));
+        const shapes = emojis.map((emoji) => confetti.shapeFromText({ text: emoji, scalar }));
 
         confetti({
           ...defaults,
           particleCount: particleCount * 0.4,
           scalar,
           shapes: shapes,
-          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
         });
       }, 250);
 
@@ -107,12 +107,12 @@ export const GameCanvas = () => {
       setScoreGain(gain);
       setShowScorePopup(true);
       setPrevScore(score);
-      
+
       // Hide popup after animation
       const timer = setTimeout(() => {
         setShowScorePopup(false);
       }, 1200);
-      
+
       return () => clearTimeout(timer);
     } else if (status === 'idle' || status === 'countdown') {
       setPrevScore(0);
@@ -123,9 +123,8 @@ export const GameCanvas = () => {
 
   return (
     <div className="w-full max-w-md bg-white/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border-4 border-white relative">
-      
       {/* Header Info - Only show during gameplay */}
-      {(status === 'playing') && (
+      {status === 'playing' && (
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
             <Timer className="text-blue-500" />
@@ -141,21 +140,17 @@ export const GameCanvas = () => {
       {status === 'playing' && gameMode === 'survival' && (
         <div className="flex justify-center gap-3 mb-4">
           <div className="bg-white/80 px-3 py-1 rounded-full shadow-sm">
-            <span className="text-sm font-bold text-gray-600">
-              {questionsAnswered}問クリア
-            </span>
+            <span className="text-sm font-bold text-gray-600">{questionsAnswered}問クリア</span>
           </div>
           {tickSpeed < 1000 && (
             <div className="bg-orange-100 px-3 py-1 rounded-full shadow-sm">
-              <span className="text-sm font-bold text-orange-600">
-                ×{(1000 / tickSpeed).toFixed(1)}倍速
-              </span>
+              <span className="text-sm font-bold text-orange-600">×{(1000 / tickSpeed).toFixed(1)}倍速</span>
             </div>
           )}
         </div>
       )}
 
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode="wait">
         {status === 'idle' && (
           <motion.div
             key="start"
@@ -168,17 +163,11 @@ export const GameCanvas = () => {
               暗算クエスト
             </h1>
             <p className="text-gray-500 mb-8 font-bold">めざせ！計算マスター</p> */}
-            
-            <GameModeSelector 
-              selectedMode={gameMode}
-              onSelectMode={setGameMode}
-            />
-            
-            <DifficultySelector 
-              selectedLevel={difficultyLevel}
-              onSelectLevel={setDifficulty}
-            />
-            
+
+            <GameModeSelector selectedMode={gameMode} onSelectMode={setGameMode} />
+
+            <DifficultySelector selectedLevel={difficultyLevel} onSelectLevel={setDifficulty} />
+
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -207,13 +196,9 @@ export const GameCanvas = () => {
               className="mb-4"
             >
               {countdown > 0 ? (
-                <span className="text-9xl font-black text-sky-500 drop-shadow-lg">
-                  {countdown}
-                </span>
+                <span className="text-9xl font-black text-sky-500 drop-shadow-lg">{countdown}</span>
               ) : (
-                <span className="text-7xl font-black text-yellow-400 drop-shadow-lg">
-                  GO!
-                </span>
+                <span className="text-7xl font-black text-yellow-400 drop-shadow-lg">GO!</span>
               )}
             </motion.div>
             <p className="text-gray-500 font-bold text-lg">準備はいいかな？</p>
@@ -245,14 +230,11 @@ export const GameCanvas = () => {
 
             {/* Problem Area */}
             <div className="relative mb-8">
-               <Feedback type={feedback} />
-               <ScorePopup score={scoreGain} isVisible={showScorePopup} />
+              <Feedback type={feedback} />
+              <ScorePopup score={scoreGain} isVisible={showScorePopup} />
 
               <motion.div
-                animate={
-                    feedback === 'correct' ? { scale: [1, 1.1, 1] } :
-                    feedback === 'incorrect' ? controls : {}
-                }
+                animate={feedback === 'correct' ? { scale: [1, 1.1, 1] } : feedback === 'incorrect' ? controls : {}}
                 className="bg-slate-100 rounded-3xl py-10 px-4 shadow-inner border-2 border-slate-200"
               >
                 <div className="flex justify-center items-center gap-2 md:gap-4 text-5xl md:text-6xl font-black text-slate-700">
@@ -302,7 +284,7 @@ export const GameCanvas = () => {
               <p className="text-gray-500 font-bold">今回のスコア</p>
               <p className="text-6xl font-black text-sky-500 my-4">{score}</p>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 mb-8 text-left bg-white p-4 rounded-xl shadow-sm">
               <div>
                 <p className="text-xs text-gray-400 font-bold">さいだいコンボ</p>

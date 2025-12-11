@@ -21,7 +21,7 @@ export const useGameFeedback = ({ feedback, clearFeedback, controls }: UseGameFe
     } else if (feedback === 'incorrect') {
       controls.start({
         x: [0, -10, 10, -10, 10, 0],
-        transition: { duration: 0.4 }
+        transition: { duration: 0.4 },
       });
       const timer = setTimeout(clearFeedback, 400);
       return () => clearTimeout(timer);

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { Trophy, Zap } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -13,9 +12,7 @@ export default function Home() {
         <h1 className="text-5xl md:text-7xl font-black text-indigo-900 tracking-tight font-mochiy-pop-one">
           Math<span className="text-orange-500">Pop!</span>
         </h1>
-        <p className="text-xl text-indigo-600 font-medium font-mochiy-pop-one">
-          楽しく学べる暗算アプリ
-        </p>
+        <p className="text-xl text-indigo-600 font-medium font-mochiy-pop-one">楽しく学べる暗算アプリ</p>
       </div>
 
       <div className="space-y-6 w-full max-w-xs">
@@ -24,7 +21,7 @@ export default function Home() {
             あそぶ
           </Button>
         </Link>
-        
+
         {/* <div className="grid grid-cols-2 gap-4">
           <div className="bg-white/60 p-4 rounded-2xl backdrop-blur-sm">
             <Trophy className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
