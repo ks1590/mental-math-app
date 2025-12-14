@@ -41,7 +41,7 @@ const generateByOperation = (operation: Operation): { a: number; b: number; answ
     case 'subtract':
       // Subtraction: ensure positive result
       a = Math.floor(Math.random() * 9) + 10; // 10-18
-      b = Math.floor(Math.random() * 9) + 1;  // 1-9
+      b = Math.floor(Math.random() * 9) + 1; // 1-9
       // Make sure a > b
       if (a <= b) {
         [a, b] = [b + 1, a];
@@ -76,11 +76,16 @@ const generateByOperation = (operation: Operation): { a: number; b: number; answ
 // Get operation symbol
 const getOperationSymbol = (operation: Operation): string => {
   switch (operation) {
-    case 'add': return '+';
-    case 'subtract': return '-';
-    case 'multiply': return '×';
-    case 'divide': return '÷';
-    default: return '+';
+    case 'add':
+      return '+';
+    case 'subtract':
+      return '-';
+    case 'multiply':
+      return '×';
+    case 'divide':
+      return '÷';
+    default:
+      return '+';
   }
 };
 
@@ -99,7 +104,7 @@ export const generateProblem = (level: DifficultyLevel = 1): Problem => {
   // Generate distractors based on operation type
   while (choices.size < 4) {
     let distractor: number;
-    
+
     if (operation === 'divide' || operation === 'multiply') {
       // For multiplication/division, use nearby values
       const offset = Math.floor(Math.random() * 5) - 2; // -2 to +2

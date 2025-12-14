@@ -31,11 +31,11 @@ export const ScorePopup = ({ score, isVisible }: ScorePopupProps) => {
           {/* Score Pop-up */}
           <motion.div
             initial={{ scale: 0, y: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.5, 1.2], 
-              y: -80, 
+            animate={{
+              scale: [0, 1.5, 1.2],
+              y: -80,
               opacity: [0, 1, 1, 0],
-              rotate: [0, 5, -5, 0]
+              rotate: [0, 5, -5, 0],
             }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: 1.2, ease: 'easeOut' }}
@@ -43,12 +43,12 @@ export const ScorePopup = ({ score, isVisible }: ScorePopupProps) => {
           >
             <div className="relative">
               <motion.div
-                animate={{ 
+                animate={{
                   boxShadow: [
                     '0 0 20px rgba(251, 191, 36, 0.6)',
                     '0 0 40px rgba(251, 191, 36, 0.8)',
                     '0 0 20px rgba(251, 191, 36, 0.6)',
-                  ]
+                  ],
                 }}
                 transition={{ duration: 0.6, repeat: Infinity }}
                 className="bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-500 text-white font-black text-6xl px-8 py-4 rounded-3xl shadow-2xl border-4 border-white"
@@ -62,30 +62,28 @@ export const ScorePopup = ({ score, isVisible }: ScorePopupProps) => {
           {particles.map((particle) => (
             <motion.div
               key={particle.id}
-              initial={{ 
-                scale: 0, 
-                x: 0, 
-                y: 0, 
+              initial={{
+                scale: 0,
+                x: 0,
+                y: 0,
                 opacity: 1,
-                rotate: 0 
+                rotate: 0,
               }}
-              animate={{ 
+              animate={{
                 scale: [0, 1.5, 0],
                 x: particle.x,
                 y: particle.y,
                 opacity: [0, 1, 0],
-                rotate: 360
+                rotate: 360,
               }}
-              transition={{ 
+              transition={{
                 duration: 1,
                 delay: particle.delay,
-                ease: 'easeOut'
+                ease: 'easeOut',
               }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none"
             >
-              <div className="text-4xl">
-                {Math.random() > 0.5 ? '⭐' : '✨'}
-              </div>
+              <div className="text-4xl">{Math.random() > 0.5 ? '⭐' : '✨'}</div>
             </motion.div>
           ))}
         </>

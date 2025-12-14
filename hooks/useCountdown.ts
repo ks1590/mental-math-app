@@ -17,16 +17,16 @@ interface UseCountdownReturn {
 export const useCountdown = ({ status, onComplete }: UseCountdownProps): UseCountdownReturn => {
   const [countdown, setCountdown] = useState(3);
   const onCompleteRef = useRef(onComplete);
-  
+
   // Keep onComplete ref up to date
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
-  
+
   useEffect(() => {
     if (status === 'countdown') {
       setCountdown(3);
-      
+
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
@@ -40,7 +40,7 @@ export const useCountdown = ({ status, onComplete }: UseCountdownProps): UseCoun
           return prev - 1;
         });
       }, 1000);
-      
+
       return () => clearInterval(timer);
     }
   }, [status]);
