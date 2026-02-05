@@ -3,7 +3,7 @@ import { generateProblem, Problem, DifficultyLevel } from '@/lib/math-engine';
 
 type GameStatus = 'idle' | 'countdown' | 'playing' | 'finished';
 type FeedbackType = 'correct' | 'incorrect' | null;
-type GameMode = 'normal' | 'survival';
+type GameMode = 'normal' | 'survival' | 'fill-in-the-blank';
 
 interface GameState {
   status: GameStatus;
@@ -51,13 +51,15 @@ export const useGameStore = create<GameState>((set, get) => ({
   startGame: (duration?: number) => {
     const { difficultyLevel, gameMode } = get();
     const initialTime = duration ?? (gameMode === 'survival' ? 10 : 30);
+    const problemType = gameMode === 'fill-in-the-blank' ? 'fill-in-the-blank' : 'normal';
+
     set({
       status: 'countdown',
       score: 0,
       combo: 0,
       maxCombo: 0,
       timeLeft: initialTime,
-      currentProblem: generateProblem(difficultyLevel),
+      currentProblem: generateProblem(difficultyLevel, problemType),
       feedback: null,
       questionsAnswered: 0,
       tickSpeed: 1000,
@@ -109,7 +111,10 @@ export const useGameStore = create<GameState>((set, get) => ({
         combo: newCombo,
         maxCombo: Math.max(maxCombo, newCombo),
         feedback: 'correct',
-        currentProblem: generateProblem(difficultyLevel),
+        currentProblem: generateProblem(
+          difficultyLevel,
+          gameMode === 'fill-in-the-blank' ? 'fill-in-the-blank' : 'normal',
+        ),
         questionsAnswered: newQuestionsAnswered,
         timeLeft: newTimeLeft,
         tickSpeed: newTickSpeed,
