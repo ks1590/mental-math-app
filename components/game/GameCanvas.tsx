@@ -238,18 +238,42 @@ export const GameCanvas = () => {
                 className="bg-slate-100 rounded-3xl py-10 px-4 shadow-inner border-2 border-slate-200"
               >
                 <div className="flex justify-center items-center gap-2 md:gap-4 text-5xl md:text-6xl font-black text-slate-700">
-                  <span>{currentProblem.operands.a}</span>
+                  {/* Operand A */}
+                  {currentProblem.missingComponent === 'a' ? (
+                    <span className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-blue-500">
+                      ?
+                    </span>
+                  ) : (
+                    <span>{currentProblem.operands.a}</span>
+                  )}
+
+                  {/* Operation Symbol */}
                   <span className={getOperationColor(currentProblem.operation)}>
                     {currentProblem.operation === 'add' && '+'}
                     {currentProblem.operation === 'subtract' && '-'}
                     {currentProblem.operation === 'multiply' && '×'}
                     {currentProblem.operation === 'divide' && '÷'}
                   </span>
-                  <span>{currentProblem.operands.b}</span>
+
+                  {/* Operand B */}
+                  {currentProblem.missingComponent === 'b' ? (
+                    <span className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-blue-500">
+                      ?
+                    </span>
+                  ) : (
+                    <span>{currentProblem.operands.b}</span>
+                  )}
+
                   <span className="text-gray-400">=</span>
-                  <span className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-blue-500">
-                    ?
-                  </span>
+
+                  {/* Result */}
+                  {currentProblem.missingComponent === 'result' || !currentProblem.missingComponent ? (
+                    <span className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-blue-500">
+                      ?
+                    </span>
+                  ) : (
+                    <span>{currentProblem.result}</span>
+                  )}
                 </div>
               </motion.div>
             </div>
