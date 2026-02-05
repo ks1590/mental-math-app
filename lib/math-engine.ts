@@ -1,13 +1,16 @@
 export type Operation = 'add' | 'subtract' | 'multiply' | 'divide';
 export type DifficultyLevel = 0 | 1 | 2 | 3;
+export type ProblemType = 'normal' | 'fill-in-the-blank';
 
 export type Problem = {
   id: string;
   expression: string;
   answer: number;
+  result: number; // The result of the equation (a op b = result)
   choices: number[];
   operation: Operation;
   operands: { a: number; b: number };
+  missingComponent: 'a' | 'b' | 'result';
 };
 
 // Get operations allowed for each difficulty level
@@ -27,15 +30,15 @@ const getOperationsForLevel = (level: DifficultyLevel): Operation[] => {
 };
 
 // Generate a problem based on operation type
-const generateByOperation = (operation: Operation): { a: number; b: number; answer: number } => {
-  let a: number, b: number, answer: number;
+const generateByOperation = (operation: Operation): { a: number; b: number; result: number } => {
+  let a: number, b: number, result: number;
 
   switch (operation) {
     case 'add':
       // Addition: 1-digit + 1-digit (result <= 18)
       a = Math.floor(Math.random() * 9) + 1;
       b = Math.floor(Math.random() * 9) + 1;
-      answer = a + b;
+      result = a + b;
       break;
 
     case 'subtract':
@@ -46,14 +49,14 @@ const generateByOperation = (operation: Operation): { a: number; b: number; answ
       if (a <= b) {
         [a, b] = [b + 1, a];
       }
-      answer = a - b;
+      result = a - b;
       break;
 
     case 'multiply':
       // Multiplication: times table (1-9 × 1-9)
       a = Math.floor(Math.random() * 9) + 1;
       b = Math.floor(Math.random() * 9) + 1;
-      answer = a * b;
+      result = a * b;
       break;
 
     case 'divide':
@@ -61,16 +64,16 @@ const generateByOperation = (operation: Operation): { a: number; b: number; answ
       b = Math.floor(Math.random() * 8) + 2; // 2-9 (divisor)
       const quotient = Math.floor(Math.random() * 9) + 1; // 1-9
       a = b * quotient; // dividend
-      answer = quotient;
+      result = quotient;
       break;
 
     default:
       a = 1;
       b = 1;
-      answer = 2;
+      result = 2;
   }
 
-  return { a, b, answer };
+  return { a, b, result };
 };
 
 // Get operation symbol
@@ -89,13 +92,25 @@ const getOperationSymbol = (operation: Operation): string => {
   }
 };
 
-export const generateProblem = (level: DifficultyLevel = 1): Problem => {
+export const generateProblem = (level: DifficultyLevel = 1, type: ProblemType = 'normal'): Problem => {
   // Select random operation based on difficulty level
   const operations = getOperationsForLevel(level);
   const operation = operations[Math.floor(Math.random() * operations.length)];
 
   // Generate problem
-  const { a, b, answer } = generateByOperation(operation);
+  const { a, b, result } = generateByOperation(operation);
+
+  // Determine missing component
+  let missingComponent: 'a' | 'b' | 'result' = 'result';
+  let answer: number = result;
+
+  if (type === 'fill-in-the-blank') {
+    // Randomly hide 'a' or 'b'
+    // For division, hiding 'b' (divisor) is tricky if we want to keep it simple, but logic holds.
+    // For subtraction, hiding 'b' is effectively: a - ? = result -> ? = a - result
+    missingComponent = Math.random() < 0.5 ? 'a' : 'b';
+    answer = missingComponent === 'a' ? a : b;
+  }
 
   // Generate choices (one correct answer + 3 distractors)
   const choices = new Set<number>();
@@ -105,20 +120,21 @@ export const generateProblem = (level: DifficultyLevel = 1): Problem => {
   while (choices.size < 4) {
     let distractor: number;
 
-    if (operation === 'divide' || operation === 'multiply') {
-      // For multiplication/division, use nearby values
+    const useNearby = Math.random() < 0.6; // 60% chance to use nearby values
+
+    if (useNearby) {
       const offset = Math.floor(Math.random() * 5) - 2; // -2 to +2
       distractor = answer + offset;
     } else {
-      // For addition/subtraction, use common mistakes
-      const mistakes = [
-        answer + 1,
-        answer - 1,
-        answer + 2,
-        answer - 2,
-        a, // operand itself
-        b,
-      ];
+      // Logic for common mistakes depends on what we are looking for
+      const mistakes = [answer + 10, answer - 10, answer * 2, Math.floor(answer / 2)];
+      if (type === 'normal') {
+        mistakes.push(a, b); // Operand as answer
+      } else {
+        mistakes.push(result); // Result as answer
+        if (missingComponent === 'a') mistakes.push(b);
+        if (missingComponent === 'b') mistakes.push(a);
+      }
       distractor = mistakes[Math.floor(Math.random() * mistakes.length)];
     }
 
@@ -132,14 +148,24 @@ export const generateProblem = (level: DifficultyLevel = 1): Problem => {
   const shuffledChoices = Array.from(choices).sort(() => Math.random() - 0.5);
 
   const symbol = getOperationSymbol(operation);
-  const expression = `${a} ${symbol} ${b} = ?`;
+
+  let expression = '';
+  if (missingComponent === 'result') {
+    expression = `${a} ${symbol} ${b} = ?`;
+  } else if (missingComponent === 'a') {
+    expression = `? ${symbol} ${b} = ${result}`;
+  } else {
+    expression = `${a} ${symbol} ? = ${result}`;
+  }
 
   return {
     id: Math.random().toString(36).substring(7),
     expression,
     answer,
+    result,
     choices: shuffledChoices,
     operation,
     operands: { a, b },
+    missingComponent,
   };
 };

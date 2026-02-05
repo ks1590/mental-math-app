@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, Zap } from 'lucide-react';
+import { Clock, Zap, HelpCircle } from 'lucide-react';
 
-type GameMode = 'normal' | 'survival';
+type GameMode = 'normal' | 'survival' | 'fill-in-the-blank';
 
 interface GameModeSelectorProps {
   selectedMode: GameMode;
@@ -30,6 +30,16 @@ const modeConfig = [
     hoverColor: 'hover:bg-orange-300',
     borderColor: 'border-orange-600',
     textColor: 'text-orange-900',
+  },
+  {
+    mode: 'fill-in-the-blank' as GameMode,
+    title: 'あなうめクイズ',
+    description: '？に入る数字はなにかな？',
+    icon: HelpCircle,
+    color: 'bg-emerald-400',
+    hoverColor: 'hover:bg-emerald-300',
+    borderColor: 'border-emerald-600',
+    textColor: 'text-emerald-900',
   },
 ];
 
