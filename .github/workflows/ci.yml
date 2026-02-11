@@ -1,0 +1,35 @@
+name: Quality Guard
+
+on:
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quality-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (oxlint)
+        run: npm run lint:ox
+
+      - name: Format Check (oxfmt)
+        run: npm run format:ox -- --check
+
+      - name: Type Check
+        run: npm run type-check
+
+      - name: Build
+        run: npm run build
