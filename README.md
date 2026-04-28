@@ -2,17 +2,13 @@
 
 小学生向けの楽しい暗算学習アプリ
 
-![Next.js](https://img.shields.io/badge/Next.js-15.0-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0--alpha-38bdf8)
-![License](https://img.shields.io/badge/license-MIT-green)
+🚀 **アプリをプレイする**: [https://mental-math-app-pi.vercel.app/](https://mental-math-app-pi.vercel.app/)
 
 ## 📖 概要
 
 **MathPop!** は、小学生が楽しく暗算を学べるゲーム形式のWebアプリケーションです。ゲーミフィケーション要素を取り入れ、子どもたちが自然と計算力を身につけられるよう設計されています。
 
 ### 🎯 主な特徴
-
 - 🎨 **カラフルで親しみやすいUI** - 子どもが夢中になるポップなデザイン
 - 📱 **PWA対応** - スマホにインストールしてアプリのように使える
 - 🎮 **2つのゲームモード** - タイムアタックとサバイバル
@@ -268,87 +264,3 @@ mental-math-app/
 - **Manifest**: アプリ名、アイコン、テーマカラーを定義
 - **Viewport**: モバイル最適化設定
 - **Icons**: 192px、512px、180px（Apple用）
-
----
-
-## 🧪 開発ガイド
-
-### 新しい演算を追加する
-
-[`lib/math-engine.ts`](file:///Users/suzuki_kensuke/work_space/mental-math-app/lib/math-engine.ts)で`generateByOperation`関数を拡張：
-
-```typescript
-case 'new_operation':
-  // 問題生成ロジック
-  a = ...;
-  b = ...;
-  answer = ...;
-  break;
-```
-
-### 新しい難易度レベルを追加する
-
-1. `DifficultyLevel`型を更新
-2. `getOperationsForLevel`関数に新しいケースを追加
-3. `DifficultySelector.tsx`の`levelConfig`に設定を追加
-
-### スタイルのカスタマイズ
-
-Tailwind CSS v4のユーティリティクラスを使用：
-
-```tsx
-<div className="bg-sky-400 hover:bg-sky-300 rounded-2xl">
-  {/* コンテンツ */}
-</div>
-```
-
----
-
-## 🤝 コントリビューション
-
-プルリクエストは歓迎します！大きな変更の場合は、まずissueを開いて変更内容を議論してください。
-
-### 開発フロー
-
-1. このリポジトリをフォーク
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'Add amazing feature'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを作成
-
----
-
-## 📄 ライセンス
-
-MIT License
-
----
-
-## 👥 Authors
-
-- あなたの名前 - [@your-twitter](https://twitter.com/your-twitter)
-
----
-
-## 🙏 謝辞
-
-- デザインインスピレーション: 子ども向け学習アプリのベストプラクティス
-- アイコン: [Lucide Icons](https://lucide.dev/)
-- フォント: [Google Fonts](https://fonts.google.com/) - Geist Sans & Geist Mono
-
----
-
-## 📝 更新履歴
-
-### v1.0.0 (2025-11-23)
-
-- ✨ 初回リリース
-- 🎮 2つのゲームモード（タイムアタック・サバイバル）
-- 📊 4段階の難易度レベル
-- 🧮 四則演算対応
-- 📱 PWA対応
-- 🎨 アクセシブルな配色
-
----
-
-**楽しく学べる暗算の世界へようこそ！** 🎉
